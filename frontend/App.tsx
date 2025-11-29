@@ -8,6 +8,7 @@ import AdminPage from "@/components/AdminPage";
 import StudentPage from "@/components/StudentPage";
 import WalletPage from "@/components/WalletPage";
 import RegisterPage from "@/components/RegisterPage";
+import StudentProfilePage from "@/components/StudentProfilePage";
 
 type LoginAccount = {
   method: "wallet" | "email";
@@ -17,7 +18,7 @@ type LoginAccount = {
   canUpload?: boolean;
 };
 
-type Page = "login" | "register" | "admin" | "student" | "wallet";
+type Page = "login" | "register" | "admin" | "student" | "wallet" | "profile";
 
 function App() {
   const { connected } = useWallet();
@@ -79,6 +80,14 @@ function App() {
             >
               Dashboard
             </button>
+            {account.role === "student" && (
+              <button
+                onClick={() => setCurrentPage("profile")}
+                className={`px-3 py-1 rounded text-sm ${currentPage === "profile" ? "bg-blue-600 text-white" : "bg-white border"}`}
+              >
+                My Profile
+              </button>
+            )}
             <button
               onClick={() => setCurrentPage("wallet")}
               className={`px-3 py-1 rounded text-sm ${currentPage === "wallet" ? "bg-blue-600 text-white" : "bg-white border"}`}
@@ -115,6 +124,7 @@ function App() {
         )}
         {currentPage === "admin" && account?.role === "admin" && <AdminPage />}
         {currentPage === "student" && account?.role === "student" && <StudentPage />}
+        {currentPage === "profile" && account?.role === "student" && <StudentProfilePage />}
         {currentPage === "wallet" && account && <WalletPage />}
       </div>
     </>
