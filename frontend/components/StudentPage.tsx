@@ -87,10 +87,25 @@ export default function StudentPage(): JSX.Element {
 
         {account && account.role === "student" && (
           <div className="mb-6">
-            <div className="border border-blue-100 rounded p-4 bg-blue-50">
-              <div className="text-sm font-medium mb-1">Your Account</div>
-              <div className="text-sm text-gray-700">
-                {account.method === "wallet" ? `Wallet: ${account.address}` : `Email: ${account.email}`}
+            <div className="border border-blue-100 rounded-lg p-6 bg-gradient-to-br from-blue-50 to-white">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                  {account.name ? account.name.charAt(0).toUpperCase() : "S"}
+                </div>
+                <div className="flex-1">
+                  <div className="text-lg font-semibold text-blue-900">
+                    {account.name || "Student"}
+                  </div>
+                  {account.rollNumber && (
+                    <div className="text-sm text-gray-600">Roll: {account.rollNumber}</div>
+                  )}
+                  <div className="text-xs text-gray-500">
+                    {account.method === "wallet" ? `Wallet: ${account.address}` : `Email: ${account.email}`}
+                  </div>
+                </div>
+                <div className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-full">
+                  {account.role?.toUpperCase()}
+                </div>
               </div>
             </div>
           </div>

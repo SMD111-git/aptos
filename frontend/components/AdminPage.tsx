@@ -215,6 +215,25 @@ export default function AdminPage(): JSX.Element {
           </div>
         )}
 
+        {account && (
+          <div className="mb-6 border border-blue-100 rounded-lg p-4 bg-gradient-to-br from-blue-50 to-white">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                {account.name ? account.name.charAt(0).toUpperCase() : "A"}
+              </div>
+              <div className="flex-1">
+                <div className="font-semibold text-blue-900">{account.name || "Admin"}</div>
+                <div className="text-xs text-gray-500">
+                  {account.method === "wallet" ? account.address : account.email}
+                </div>
+              </div>
+              <div className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-full">
+                ADMIN
+              </div>
+            </div>
+          </div>
+        )}
+
         {account && !canUpload && (
           <div className="mb-4 p-4 bg-yellow-50 border border-yellow-100 rounded text-center">
             <div className="mb-2 font-medium">Upload access is currently disabled for your account.</div>

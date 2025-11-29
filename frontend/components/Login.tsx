@@ -15,17 +15,18 @@ declare global {
 
 type LoginMethod = "wallet" | "email";
 
-// add role field
+// add user profile fields
 export type LoginAccount =
-    | { method: "wallet"; address: string; publicKey?: string; canUpload?: boolean; role?: "student" | "admin" }
-    | { method: "email"; email: string; canUpload?: boolean; role?: "student" | "admin" };
+    | { method: "wallet"; address: string; publicKey?: string; canUpload?: boolean; role?: "student" | "admin"; name?: string; email?: string; rollNumber?: string; userId?: string }
+    | { method: "email"; email: string; canUpload?: boolean; role?: "student" | "admin"; name?: string; rollNumber?: string; userId?: string };
 
 type Props = {
     // optional callback called after a successful login
     onLogin?: (account: LoginAccount | null) => void;
+    onRegisterClick?: () => void;
 };
 
-export default function Login({ onLogin }: Props) {
+export default function Login({ onLogin, onRegisterClick }: Props) {
     const [mode, setMode] = useState<LoginMethod>("wallet");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -124,11 +125,35 @@ export default function Login({ onLogin }: Props) {
         }
         setLoading(true);
         try {
-            // This is a placeholder for a real authentication call.
-            // Replace with your backend/auth provider logic.
+            // Load registered users and validate credentials
+            const USERS_KEY = "myapp_users";
+            let users: any[] = [];
+            try {
+                const raw = localStorage.getItem(USERS_KEY);
+                if (raw) users = JSON.parse(raw);
+            } catch {}
+
+            const user = users.find((u) => u.email === email && u.password === password && u.role === selectedRole);
+            
+            if (!user) {
+                await new Promise((res) => setTimeout(res, 600)); // simulate delay
+                setError("Invalid email, password, or role. Please check your credentials or register.");
+                setLoading(false);
+                return;
+            }
+
+            // successful login - create account with full user profile
             await new Promise((res) => setTimeout(res, 600));
-            const canUpload = selectedRole === "admin";
-            const acc: LoginAccount = { method: "email", email, canUpload, role: selectedRole };
+            const canUpload = user.role === "admin";
+            const acc: LoginAccount = {
+                method: "email",
+                email: user.email,
+                canUpload,
+                role: user.role,
+                name: user.name,
+                rollNumber: user.rollNumber,
+                userId: user.id,
+            };
             setAccount(acc);
         } catch (err: any) {
             setError(err?.message ?? "Email login failed.");
@@ -348,6 +373,19 @@ export default function Login({ onLogin }: Props) {
 
                 {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
                 {loading && <div className="mt-3 text-sm text-blue-600">Working…</div>}
+
+                {/* Register link */}
+                {!account && (
+                    <div className="mt-4 text-center text-sm text-gray-600">
+                        New user?{" "}
+                        <button
+                            onClick={onRegisterClick}
+                            className="text-blue-600 underline hover:text-blue-800"
+                        >
+                            Register here
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
