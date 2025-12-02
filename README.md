@@ -277,11 +277,6 @@ MIT License - see LICENSE file for details
 - Move language documentation
 - React and Tailwind communities
 
-## 📞 Support
-
-For issues and questions:
-- GitHub Issues: [Create Issue]
-- Email: support@example.com
 
 ---
 
